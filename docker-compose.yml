@@ -1,0 +1,32 @@
+version: '2'
+services:
+  db:
+    image: mysql:5.7
+    ports:
+        - 3306:3306
+    volumes:
+      - "./.data/db:/var/lib/mysql"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+
+  web:
+    image: iamluc/symfony
+    links:
+        - db
+        - messaging
+    volumes:
+        - .:/var/www/html
+    ports:
+        # Adapt to you need
+        - 8000:80
+
+  messaging:
+    image: rabbitmq:management
+    ports:
+        - "1883:1883"
+        - "15672:15672"
+        - "5672:5672"
